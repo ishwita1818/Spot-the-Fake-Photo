@@ -1,0 +1,86 @@
+1. Project Overview
+
+The objective of this project was to develop a lightweight computer vision system capable of distinguishing between a genuine photograph and a recaptured photograph displayed on a digital screen. Unlike deep learning solutions that require significant computational resources, this implementation focuses on handcrafted computer vision features and a classical machine learning pipeline, making it suitable for deployment on resource-constrained devices while maintaining competitive performance.
+
+A custom balanced dataset consisting of 120 images (60 Real and 60 Screen images) was created specifically for this task. Images were captured under varying lighting conditions, camera angles, zoom levels, brightness levels, and capture distances to improve robustness and reduce overfitting to a single acquisition setup.
+
+2. Methodology
+
+The proposed pipeline consists of multiple stages designed to capture visual artifacts that commonly occur when an image is photographed from a digital display.
+
+The first stage performs image preprocessing, where images are normalized before feature extraction. Instead of relying on raw pixel values, the model extracts handcrafted computer vision descriptors that are computationally inexpensive while still capturing meaningful differences between genuine photographs and recaptured screen images.
+
+The extracted features include:
+
+Global Laplacian Variance for measuring overall image sharpness.
+Patch-wise Laplacian Statistics to capture local blur variations.
+FFT Frequency Ratios to analyze frequency-domain artifacts introduced by digital displays.
+Edge Density to measure structural information.
+Saturation Variance for analyzing color distribution.
+Specular Highlight Count to capture reflections commonly observed on screens.
+
+The extracted feature vectors are normalized using RobustScaler, which reduces the influence of outliers. Classification is performed using a machine learning model followed by CalibratedClassifierCV, which produces more reliable probability estimates. Finally, an optimized decision threshold of 0.471 was selected using validation data instead of using the default threshold of 0.5.
+
+3. Performance
+
+The final calibrated model achieved the following validation performance:
+
+Accuracy: 87.5%
+Precision: 84.62%
+Recall: 91.67%
+F1-Score: 88.00%
+AUC: 0.9549
+
+These results demonstrate that handcrafted computer vision features can effectively distinguish between real photographs and screen recaptured images while maintaining a lightweight inference pipeline.
+
+4. Latency and Cost
+
+The measured inference latency of the final prediction pipeline was approximately 125.3 ms per image on a Google Colab CPU.
+
+Since the complete pipeline executes locally without requiring any external API or cloud service, the deployment cost is effectively $0 per image for on-device inference. This makes the solution suitable for mobile or edge-device deployment where computational efficiency and operational cost are important considerations.
+
+5. Trade-off
+
+A key design decision in this project was choosing a lightweight classical computer vision pipeline instead of a deep learning model.
+
+This approach significantly reduces computational complexity, inference latency, and deployment cost while requiring only CPU resources. The model is fast enough for real-time applications and can operate entirely offline without cloud infrastructure.
+
+The trade-off is that handcrafted features have limited representational capacity compared to modern convolutional neural networks. While the proposed model achieves strong performance on the collected dataset, a sufficiently large deep learning model trained on a much larger dataset could potentially achieve higher classification accuracy, albeit with substantially higher computational requirements and deployment costs.
+
+The selected approach therefore provides a practical balance between accuracy, inference speed, model size, and deployment cost, which aligns well with the assignment objectives.
+
+6. Limitations
+
+The primary limitation of the current solution is the size and diversity of the training dataset.
+
+Although images were intentionally collected under different viewing angles, zoom levels, lighting conditions, and brightness settings, the dataset still contains only 120 images. This limits the variety of screen artifacts and environmental conditions that the model can learn.
+
+In addition, all images were collected using a limited number of devices. Different smartphone cameras, display technologies (LCD, OLED, AMOLED), screen refresh rates, and monitor types may introduce additional artifacts that are not sufficiently represented in the current dataset.
+
+7. Future Improvements
+
+Several improvements can further increase the classification accuracy while maintaining computational efficiency.
+
+1. Increase Dataset Size
+
+The single most important improvement would be collecting a significantly larger dataset containing several thousand images. A larger dataset would expose the model to a wider range of screen artifacts, reflections, and environmental conditions, resulting in improved generalization.
+
+2. Improve Dataset Diversity
+
+The dataset should include images captured using different mobile phones, tablets, laptops, monitors, OLED displays, LCD displays, and varying screen brightness levels. Including outdoor captures, low-light environments, motion blur, and different viewing angles would further improve robustness.
+
+3. Better Data Balancing
+
+Rather than balancing only the number of images per class, the dataset should also be balanced across different resolutions, display types, object categories, brightness levels, and camera distances. This reduces the possibility of the model learning unintended shortcuts.
+
+4. Additional Handcrafted Features
+
+Future work could incorporate additional texture descriptors such as Local Binary Patterns (LBP), Gabor filters, Haralick texture features, and color consistency measures. These descriptors may capture screen artifacts that are not fully represented by the current feature set.
+
+5. Hybrid Feature Extraction
+
+A promising direction would be combining the current handcrafted features with embeddings extracted from lightweight CNN architectures such as MobileNetV3 or EfficientNet-Lite. Such a hybrid approach could improve classification accuracy while preserving relatively low inference latency.
+
+6. Extensive Hyperparameter Optimization
+
+Additional cross-validation and broader hyperparameter searches could further improve model calibration, feature weighting, and classification performance.
