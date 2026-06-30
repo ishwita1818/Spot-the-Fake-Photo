@@ -1,10 +1,10 @@
-1. Project Overview
+1. PROJECT OVERVIEW
 
 The objective of this project was to develop a lightweight computer vision system capable of distinguishing between a genuine photograph and a recaptured photograph displayed on a digital screen. Unlike deep learning solutions that require significant computational resources, this implementation focuses on handcrafted computer vision features and a classical machine learning pipeline, making it suitable for deployment on resource-constrained devices while maintaining competitive performance.
 
 A custom balanced dataset consisting of 120 images (60 Real and 60 Screen images) was created specifically for this task. Images were captured under varying lighting conditions, camera angles, zoom levels, brightness levels, and capture distances to improve robustness and reduce overfitting to a single acquisition setup.
 
-2. Methodology
+2. METHODOLOGY
 
 The proposed pipeline consists of multiple stages designed to capture visual artifacts that commonly occur when an image is photographed from a digital display.
 
@@ -21,7 +21,7 @@ Specular Highlight Count to capture reflections commonly observed on screens.
 
 The extracted feature vectors are normalized using RobustScaler, which reduces the influence of outliers. Classification is performed using a machine learning model followed by CalibratedClassifierCV, which produces more reliable probability estimates. Finally, an optimized decision threshold of 0.471 was selected using validation data instead of using the default threshold of 0.5.
 
-3. Performance
+3. PERFORMANCE
 
 The final calibrated model achieved the following validation performance:
 
@@ -33,13 +33,13 @@ AUC: 0.9549
 
 These results demonstrate that handcrafted computer vision features can effectively distinguish between real photographs and screen recaptured images while maintaining a lightweight inference pipeline.
 
-4. Latency and Cost
+4. LATENCY AND COST
 
 The measured inference latency of the final prediction pipeline was approximately 125.3 ms per image on a Google Colab CPU.
 
 Since the complete pipeline executes locally without requiring any external API or cloud service, the deployment cost is effectively $0 per image for on-device inference. This makes the solution suitable for mobile or edge-device deployment where computational efficiency and operational cost are important considerations.
 
-5. Trade-off
+5. TRADE OFF
 
 A key design decision in this project was choosing a lightweight classical computer vision pipeline instead of a deep learning model.
 
@@ -49,7 +49,7 @@ The trade-off is that handcrafted features have limited representational capacit
 
 The selected approach therefore provides a practical balance between accuracy, inference speed, model size, and deployment cost, which aligns well with the assignment objectives.
 
-6. Limitations
+6. LIMITATIONS
 
 The primary limitation of the current solution is the size and diversity of the training dataset.
 
@@ -57,7 +57,7 @@ Although images were intentionally collected under different viewing angles, zoo
 
 In addition, all images were collected using a limited number of devices. Different smartphone cameras, display technologies (LCD, OLED, AMOLED), screen refresh rates, and monitor types may introduce additional artifacts that are not sufficiently represented in the current dataset.
 
-7. Future Improvements
+7. FUTURE IMPROVEMENTS
 
 Several improvements can further increase the classification accuracy while maintaining computational efficiency.
 
