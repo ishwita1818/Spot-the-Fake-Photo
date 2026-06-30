@@ -7,8 +7,8 @@ import joblib
 from scipy import fftpack
 
 # load model and scaler
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "model", "model.joblib")
-SCALER_PATH = os.path.join(os.path.dirname(__file__), "model", "scaler.joblib")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model.joblib")
+SCALER_PATH = os.path.join(os.path.dirname(__file__), "scaler.joblib")
 clf = joblib.load(MODEL_PATH)
 scaler = joblib.load(SCALER_PATH)
 
